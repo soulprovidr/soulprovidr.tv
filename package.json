@@ -17,7 +17,10 @@
     "autobuild": "rollup -c -w",
     "dev": "run-p start autobuild",
     "start": "serve public",
-    "collect:debug": "node scripts/collect -c ./config/channels.json --debug"
+    "collect": "node scripts/collect",
+    "deploy": "yarn build && yarn collect && yarn deploy:app && yarn deploy:videos",
+    "deploy:app": "node scripts/deploy --app",
+    "deploy:videos": "node scripts/deploy --videos"
   },
   "dependencies": {
     "aws-sdk": "^2.271.1",
