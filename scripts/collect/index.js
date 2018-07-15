@@ -1,2 +1,3 @@
-const main = require('./main');
-module.exports = main;
+const collect = require('./collect');
+
+module.exports = collect;

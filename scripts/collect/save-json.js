@@ -4,13 +4,12 @@ const path = require('path');
 /**
  * Write JSON data to specified location.
  *
- * @param {*} folder
- * @param {*} filename
+ * @param {String} filePath Path to JSON file.
  * @param {*} data
  */
-function saveJSON(folder, filename, data) {
+function saveJSON(filePath, data) {
   fs.writeFileSync(
-    path.join(folder, filename),
+    path.resolve(filePath),
     JSON.stringify(data),
     'utf8'
   );

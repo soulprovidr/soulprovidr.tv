@@ -6,7 +6,7 @@ const ytdl = require('youtube-dl');
  * @param {*} url
  * @returns
  */
-function getInfo(url) {
+function getPlaylistInfo(url) {
   return new Promise(resolve => {
     console.log(`Fetching playlist info...`);
     ytdl.getInfo(url, [
@@ -21,4 +21,4 @@ function getInfo(url) {
   });
 }
 
-module.exports = getInfo;
+module.exports = getPlaylistInfo;

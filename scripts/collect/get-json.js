@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const fse = require('fs-extra');
 const exit = require('./exit');
 
@@ -12,7 +13,7 @@ function getJSON(filePath, defaultValue = {}) {
   // Create file.
   try {
     console.log(`Ensuring ${filePath} exists...`);
-    fse.ensureFileSync(filePath);
+    fse.ensureFileSync(path.resolve(filePath));
   } catch (e) {
     exit(e);
   }

@@ -1,3 +1,4 @@
+const path = require('path');
 const fse = require('fs-extra');
 const exit = require('./exit');
 
@@ -10,7 +11,7 @@ const exit = require('./exit');
 function createFolder(folder) {
   try {
     console.log(`Ensuring ${folder} exists...`);
-    return fse.ensureDirSync(folder);
+    return fse.ensureDirSync(path.resolve(folder));
   } catch (e) {
     exit(e);
   }

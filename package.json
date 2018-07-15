@@ -16,17 +16,15 @@
     "build": "rollup -c",
     "autobuild": "rollup -c -w",
     "dev": "run-p start autobuild",
-    "start": "serve public",
+    "start": "serve ./public",
     "collect": "node scripts/collect",
-    "deploy": "yarn build && yarn collect && yarn deploy:app && yarn deploy:videos",
-    "deploy:app": "node scripts/deploy --app",
-    "deploy:videos": "node scripts/deploy --videos"
+    "deploy": "node scripts/deploy"
   },
   "dependencies": {
-    "aws-sdk": "^2.271.1",
-    "commander": "^2.16.0",
     "dotenv": "^6.0.0",
+    "express": "^4.16.3",
     "fs-extra": "^6.0.1",
+    "s3-easy-deploy": "^1.1.0",
     "youtube-dl": "^1.12.2"
   }
 }

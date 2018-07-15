@@ -1,3 +1,3 @@
-const main = require('./main');
+const deploy = require('./deploy');
 
-module.exports = main;
+module.exports = deploy;

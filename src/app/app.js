@@ -1,5 +1,5 @@
 import App from './App.html';
-import Store from './store.js';
+//import Store from './store.js';
 
 const app = new App({
 	target: document.body,
