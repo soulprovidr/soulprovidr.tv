@@ -1,20 +1,21 @@
 import { SELECT_CHANNEL, TOGGLE_MENU } from './actions';
 
-const INITIAL_STATE = {
+const initialState = {
   channel: null,
   showMenu: true
 };
 
-export default function core(state = INITIAL_STATE, action) {
+export default (state = initialState, action) => {
   switch (action.type) {
   case SELECT_CHANNEL:
-    return Object.assign({}, {
+    return {
+      ...state,
       channel: action.channel,
       showMenu: false
-    });
+    };
   case TOGGLE_MENU:
     return !state.showMenu;
   default:
     return state;
   }
-}
+};

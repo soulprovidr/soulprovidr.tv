@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux'; 
 import classnames from 'classnames';
 
-import { toggleMenu } from '~/core/reducers';
+import { toggleMenu } from '~/actions';
 
-import Loading from './components/Loading.js';
-import Logo from './components/Logo.js';
-import Overlay from './components/Overlay.js';
+import Loading from './Loading';
+import Logo from './Logo';
+import Overlay from './Overlay';
 
 import './channel.css';
 

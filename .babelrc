@@ -5,7 +5,7 @@
   ],
   "plugins": [
     ["module:babel-project-relative-import", {
-      "sourceDir": "src/web/modules/"
+      "sourceDir": "src/app/"
     }],
     "react-hot-loader/babel"
   ]

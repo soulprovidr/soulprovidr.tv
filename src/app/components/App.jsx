@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { selectChannel } from './core/actions';
+import { selectChannel } from '~/actions';
 import Channel from './channel/Channel';
 import Menu from './menu/Menu';
 
@@ -41,8 +41,8 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
   return {
-    channel: state.core.channel,
-    showMenu: state.core.showMenu
+    channel: state.channel,
+    showMenu: state.showMenu
   };
 };
 

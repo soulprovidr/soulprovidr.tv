@@ -55,10 +55,10 @@ module.exports = ({ NODE_ENV }, { mode }) => {
       'public'
     ]),
     new CopyWebpackPlugin([{
-      from: 'src/web/assets'
+      from: 'src/app/assets'
     }]),
     new HtmlWebpackPlugin({
-      template: 'src/web/index.html'
+      template: 'src/app/index.html'
     }),
     new MiniCssExtractPlugin({
       filename: 'app.[contenthash].css'
@@ -87,7 +87,7 @@ module.exports = ({ NODE_ENV }, { mode }) => {
   }
 
   const config = {
-    entry: './src/web/index.js',
+    entry: './src/app/app.js',
     output: {
       path: path.resolve(__dirname, 'public'),
       publicPath: '/',

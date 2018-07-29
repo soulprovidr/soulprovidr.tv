@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
-import MenuItem from './components/MenuItem.js';
+import MenuItem from './MenuItem';
 
 import './menu.css';
 
