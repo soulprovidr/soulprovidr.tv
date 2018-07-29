@@ -1,10 +1,27 @@
 {
+  "videosFolder": "./videos",
+
   "channels": [
+    {
+      "name": "Mariah's World",
+      "slug": "mariahs-world",
+      "playlistId": "PLkHDP4Q6aqjLjHsjr9oxglnVcSP5hODDO"
+    },
     {
       "name": "Postcards From Brazil",
       "slug": "postcards-from-brazil",
       "description": "Flamenco-flavoured jazz, straight from the streets of Rio.",
       "playlistId": "PLkHDP4Q6aqjLtWIRI5wDM5M2DV6YWBJYY"
+    },
+    {
+      "name": "Ridin' Dirty",
+      "slug": "ridin-dirty",
+      "playlistId": "PLkHDP4Q6aqjIC6Rg6ba06UmtsN0eiu6Ki"
+    },
+    {
+      "name": "Sophisticated Soul",
+      "slug": "sophisticated-soul",
+      "playlistId": "PLkHDP4Q6aqjId5Lsrnm7wIP7zAelgT1Cz"
     }
   ]
 }

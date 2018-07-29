@@ -1,0 +1,46 @@
+[
+  {
+    "title": "A Quiet Storm",
+    "description": "Add some soul to your elevator ride with songs from Sade, Bob James, Smokey Robinson, and more.",
+    "image": "https://www.billboard.com/files/media/07-sade-style-2018-billboard-1548.jpg",
+    "metadata": {
+      "title": "Lover's Rock",
+      "artist": "Sade",
+      "src": "/videos/Sade - Lover's Rock [live].mp4"
+    },
+    "tags": [
+      "jazz",
+      "adult contemporary"
+    ]
+  },
+  {
+    "title": "Divine Divas",
+    "description": "Powerful voices, glamorous personalities... these ladies are diva-tastic! Listen now!",
+    "image": "https://media1.fdncms.com/chicago/imager/u/original/28886330/whitney-5.jpg",
+    "metadata": {
+      "title": "You Give Good Love",
+      "artist": "Whitney Houston",
+      "src": "/videos/Whitney Houston - You Give Good Love.mp4"
+    },
+    "tags": [
+      "oldies",
+      "pop",
+      "vocal"
+    ]
+  },
+  {
+    "title": "Ridin' Dirty",
+    "description": "Ridin' Dirty features the greatest hip hop party jams, perfect for a weekend in Vegas or a pool party in your neighborhood.",
+    "image": "https://static.highsnobiety.com/wp-content/uploads/2016/12/12132921/expensive-cars-rappers-favorite-01.jpg",
+    "metadata": {
+      "title": "Bitch, Don't Kill My Vibe",
+      "artist": "Kendrick Lamar",
+      "src": "/videos/Kendrick Lamar - Bitch, Don't Kill My Vibe (Explicit).mp4"
+    },
+    "tags": [
+      "hip-hop",
+      "pop",
+      "explicit"
+    ]
+  }
+]

@@ -21,19 +21,19 @@ async function downloadPlaylist(playlistId, folder) {
   const savedVideos = getJSON(indexPath, []);
 
   const playlistItems = await getPlaylistInfo(playlistId);
-    for (let i = 0; i < playlistItems.length; i++) {
-      const metadata = await getVideo(playlistItems[i]);
-      if (metadata) {
-        saveVideoMetadata(metadata);
-      }
+  for (let i = 0; i < playlistItems.length; i++) {
+    const metadata = await downloadVideo(playlistItems[i]);
+    if (metadata) {
+      saveVideoMetadata(metadata);
     }
-    return true;
+  }
+  return true;
 
   function exists(videoId) {
     return savedVideos.some(video => video.id === videoId);
   }
 
-  async function getVideo(playlistItem) {
+  async function downloadVideo(playlistItem) {
     if (exists(playlistItem.id)) {
       console.log(`Video ${playlistItem.id} already exists. Skipping...`);
       return false;
@@ -42,8 +42,8 @@ async function downloadPlaylist(playlistId, folder) {
   }
 
   function saveVideoMetadata(metadata) {
-    videos.push(metadata);
-    saveJSON(indexPath, videos);
+    savedVideos.push(metadata);
+    saveJSON(indexPath, savedVideos);
   }
 }
 

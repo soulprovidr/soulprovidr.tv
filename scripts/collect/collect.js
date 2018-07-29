@@ -8,7 +8,7 @@ const saveJSON = require('./save-json');
 
 async function collect() {
 
-  const rootDir = path.resolve(config.channels_folder);
+  const rootDir = path.resolve(config.videosFolder);
 
   // Ensure channels folder exists.
   createFolder(rootDir);
@@ -26,8 +26,8 @@ async function collect() {
     );
 
     // Update index with channel data.
-    const { slug, name, description } = channel;
-    channels.push({ slug, name, description });
+    const { slug, name } = channel;
+    channels.push({ slug, name });
     saveJSON(path.join(rootDir, 'index.json'), channels);
   }
 

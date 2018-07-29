@@ -1,3 +1,1 @@
-const collect = require('./collect');
-
-module.exports = collect;
+require('./collect')();

@@ -1,0 +1,61 @@
+@font-face {
+  font-family: "standartio";
+  src: url("/fonts/standart.io/standartio.eot");
+  src: url("/fonts/standart.io/standartio.eot?#iefix") format("embedded-opentype"),
+       url("/fonts/standart.io/standartio.woff") format("woff"),
+       url("/fonts/standart.io/standartio.ttf") format("truetype"),
+       url("/fonts/standart.io/standartio.svg#standartio") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100vw;
+  height: 100vh;
+  font-family: Roboto Mono;
+  letter-spacing: .5px;
+  font-size: 11pt;
+}
+
+.bg-darker {
+  background: #16181b;
+}
+
+i.icon {
+  font-style: normal;
+  font-family: "standartio";
+  vertical-align: bottom;
+}
+
+#app {
+  width: 100vw;
+  height: 100vh;
+  background: white;
+}
+
+main {
+  overflow: hidden;
+}
+
+.channel {
+  width: 100vw;
+  height: 100vh;
+  background-image: url(/img/static.gif);
+  background-size: cover;
+  background-position: center;
+  transition: transform 1.5s cubic-bezier(.19,1,.22,1);
+  /* transform: translateX(50%); */
+  transform: translateY(50%);
+  will-change: transform;
+}
+
+.channel.is-open {
+  /* transform: translateX(0); */
+  transform: translateY(0);
+}

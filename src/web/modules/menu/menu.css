@@ -1,0 +1,59 @@
+.navbar__logo {
+  width: 35px;
+  height: 35px;
+}
+
+.menu {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+  /* transform: translateX(-100%); */
+  transform: translateY(-100%);
+  will-change: transform;
+  background: white;
+  overflow-x: scroll;
+  z-index: 5;
+}
+
+.menu.is-open {
+  /* transform: translateX(0); */
+  transform: translateY(0);
+}
+
+.menu header {
+  position: fixed;
+  right: 0; bottom: 0; left: 0;
+
+}
+
+.menu__item {
+  transition: transform 1s cubic-bezier(0.075, 0.82, 0.165, 1),
+              filter 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
+  cursor: pointer;
+  border-bottom: 1px solid #ddd;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 500px;
+  filter: grayscale(0.6) brightness(0.5);
+}
+
+.menu__item:hover,
+.menu__item.active {
+  filter: grayscale(0) brightness(1);
+}
+
+.menu__item p {
+  color: #5A5A5A;
+}
+
+.menu__item img {
+  border-radius: 4px;
+  width: 100%;
+}
+
+.menu__item .card {
+  border: none;
+}
