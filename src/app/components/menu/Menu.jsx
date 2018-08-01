@@ -28,7 +28,7 @@ class Menu extends Component {
 
   getChannels() {
     return new Promise((resolve) => {
-      const channels = require('../../data/channels.json');
+      const channels = [];
       setTimeout(() => resolve(channels), 500);
     });
   }

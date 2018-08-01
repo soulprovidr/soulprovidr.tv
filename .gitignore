@@ -1,8 +1,9 @@
 .DS_Store
-node_modules
-public/bundle.*
-package-lock.json
-yarn.lock
-channels/
-.env
+**/node_modules/
+public/
+**/.env
 .vscode
+**/.lambda
+**/build
+**/event.json
+*.log

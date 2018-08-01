@@ -1,11 +1,10 @@
-const path = require('path');
-const webpack = require('webpack');
+const autoprefixer = require('autoprefixer');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CleanTerminalPlugin = require('clean-terminal-webpack-plugin');
-const autoprefixer = require('autoprefixer');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
+const webpack = require('webpack');
 
 module.exports = ({ NODE_ENV }, { mode }) => {
   const rules = [
@@ -20,9 +19,7 @@ module.exports = ({ NODE_ENV }, { mode }) => {
     {
       test: /\.css$/,
       use: [
-        mode === 'production'
-          ? MiniCssExtractPlugin.loader
-          : 'style-loader',
+        'style-loader',
         {
           loader: 'css-loader',
           options: {
@@ -50,18 +47,16 @@ module.exports = ({ NODE_ENV }, { mode }) => {
     new webpack.DefinePlugin({
       __ENV__: JSON.stringify(NODE_ENV),
       __VERSION__: JSON.stringify(require('./package.json').version),
+      __CHANNELS__: require('./channels.json')
     }),
-    new CleanWebpackPlugin([
-      'public'
-    ]),
+    new CleanWebpackPlugin(['public/*'], {
+      exclude: ['channels.json']
+    }),
     new CopyWebpackPlugin([{
       from: 'src/app/assets'
     }]),
     new HtmlWebpackPlugin({
       template: 'src/app/index.html'
-    }),
-    new MiniCssExtractPlugin({
-      filename: 'app.[contenthash].css'
     })
   ];
 
