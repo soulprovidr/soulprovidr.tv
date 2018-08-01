@@ -53,6 +53,10 @@ async function putObject(Key, Body) {
   });
 }
 
+function saveVideoDuplicate(videoId, callback) {
+  return callback(null, { success: true, skipped: true, videoId });
+}
+
 function saveVideoError(err, callback) {
   return callback(err);
 }
@@ -75,7 +79,7 @@ async function saveVideo(event, context, callback) {
 
   try {
     await getObject(Key);
-    return saveVideoSuccess();
+    return saveVideoDuplicate(videoId, callback);
   } catch (e) {
     console.log('Video does not exist, beginning download...');
   }
