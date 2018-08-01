@@ -7,6 +7,6 @@
   "license": "MIT",
   "dependencies": {
     "aws-sdk": "^2.283.1",
-    "youtube-dl": "^1.12.2"
+    "ytdl-core": "^0.21.1"
   }
 }

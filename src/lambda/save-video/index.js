@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk');
 const fs = require('fs');
-const ytdl = require('youtube-dl');
+const ytdl = require('ytdl-core');
 
 const Bucket = process.env.AWS_S3_BUCKET_NAME;
 const S3 = new AWS.S3();
@@ -28,8 +28,10 @@ async function getObject(Key) {
  */
 function downloadVideo(videoId) {
   return new Promise((resolve, reject) => {
-    const download = ytdl(videoId);
     const tmp = `/tmp/${videoId}`;
+    const download = ytdl('http://youtube.com/watch?v=' + videoId, {
+      filter: format => format.container === 'mp4'
+    });
     download.on('info', () => download.pipe(fs.createWriteStream(tmp)));
     download.on('end', () => resolve(fs.readFileSync(tmp)));
     download.on('error', reject);
@@ -51,8 +53,8 @@ async function putObject(Key, Body) {
   });
 }
 
-function saveVideoError(videoId, callback) {
-  return callback({ success: false, videoId });
+function saveVideoError(err, callback) {
+  return callback(err);
 }
 
 function saveVideoSuccess(videoId, callback) {
@@ -83,7 +85,7 @@ async function saveVideo(event, context, callback) {
     await putObject(Key, Body);
     return saveVideoSuccess(videoId, callback);
   } catch (e) {
-    return saveVideoError(videoId, callback);
+    return saveVideoError(e, callback);
   }
 }
 

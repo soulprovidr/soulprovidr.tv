@@ -24,23 +24,19 @@ fse.ensureDirSync(publicDir);
       continue;
     }
 
-
+    console.log(`Downloading videos for ${channels[i].slug}...`);
     try {
-      console.log(`Downloading videos for ${channels[i].slug}...`);
       const results = await Promise.all(playlistItems.map(({ id }) => saveVideo(id)));
-      results.forEach(r => {
-        try {
-          const response = JSON.parse(r.Payload);
-          if (typeof response === 'object' && response.success) {
-            channels[i].videos.push(response.videoId);
-            saveJSON(path.join(publicDir, 'channels.json'), channels);
-          }
-        } catch (e) {
-          console.error(e);
+      results.forEach(({ Payload }) => {
+        console.log(Payload);
+        const payload = JSON.parse(Payload);
+        if (payload.success) {
+          channels[i].videos.push(payload.videoId);
+          saveJSON(path.join(publicDir, 'channels.json'), channels);
         }
-      });  
+      });
     } catch (e) {
-      continue;  
+      console.error(e);
     }
   }
 
