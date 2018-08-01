@@ -51,6 +51,14 @@ async function putObject(Key, Body) {
   });
 }
 
+function saveVideoError(videoId, callback) {
+  return callback({ success: false, videoId });
+}
+
+function saveVideoSuccess(videoId, callback) {
+  return callback(null, { success: true, videoId });
+}
+
 /**
  * Saves a specified YouTube video to an S3 bucket.
  *
@@ -65,7 +73,7 @@ async function saveVideo(event, context, callback) {
 
   try {
     await getObject(Key);
-    return callback(null, videoId);
+    return saveVideoSuccess();
   } catch (e) {
     console.log('Video does not exist, beginning download...');
   }
@@ -73,11 +81,10 @@ async function saveVideo(event, context, callback) {
   try {
     const Body = await downloadVideo(videoId);
     await putObject(Key, Body);
-    return callback(null, videoId);
+    return saveVideoSuccess(videoId, callback);
   } catch (e) {
-    return callback(e);
+    return saveVideoError(videoId, callback);
   }
-
-};
+}
 
 exports.handler = saveVideo;

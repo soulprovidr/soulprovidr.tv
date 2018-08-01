@@ -2,11 +2,13 @@ require('dotenv').config();
 
 const AWS = require('aws-sdk');
 const fs = require('fs');
+const fse = require('fs-extra');
 const path = require('path');
 const ytdl = require('youtube-dl');
 
 const Lambda = new AWS.Lambda();
 const publicDir = path.resolve('./public');
+fse.ensureDirSync(publicDir);
 
 (async () => {
 
@@ -22,20 +24,23 @@ const publicDir = path.resolve('./public');
       continue;
     }
 
-    console.log(`Downloading videos for ${channels[i].slug}...`);
 
-    for (let j = 0; j < playlistItems.length; j++) {
-      try {
-        const response = await saveYouTubeVideoToS3(playlistItems[j].id);
-        console.log(response);
-        if (response.StatusCode == 200) {
-          channels[i].videos.push(JSON.parse(response.Payload));
-          saveJSON(path.join(publicDir, 'channels.json'), channels);
+    try {
+      console.log(`Downloading videos for ${channels[i].slug}...`);
+      const results = await Promise.all(playlistItems.map(({ id }) => saveVideo(id)));
+      results.forEach(r => {
+        try {
+          const response = JSON.parse(r.Payload);
+          if (typeof response === 'object' && response.success) {
+            channels[i].videos.push(response.videoId);
+            saveJSON(path.join(publicDir, 'channels.json'), channels);
+          }
+        } catch (e) {
+          console.error(e);
         }
-      } catch (e) {
-        console.error(e);
-        continue;
-      }
+      });  
+    } catch (e) {
+      continue;  
     }
   }
 
@@ -82,14 +87,15 @@ function saveJSON(filePath, data) {
 }
 
 /**
- * Invoke the `saveYouTubeVideoToS3` Lambda function.
+ * Invoke the `saveVideo` Lambda function.
  *
  * @param {String} videoId
  * @returns
  */
-function saveYouTubeVideoToS3(videoId) {
+function saveVideo(videoId) {
+  console.log('Fetching ' + videoId + '...');
   return Lambda.invoke({
-    FunctionName: process.env.AWS_LAMBDA_ARN,
+    FunctionName: process.env.AWS_FUNCTION_NAME + '-production',
     Payload: JSON.stringify({ videoId })
   }).promise();
 }
