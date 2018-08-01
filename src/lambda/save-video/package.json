@@ -1,0 +1,12 @@
+{
+  "name": "save-video",
+  "version": "1.0.0",
+  "description": "Lambda function to save a YouTube video to S3.",
+  "main": "index.js",
+  "author": "Shola Anozie",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.283.1",
+    "youtube-dl": "^1.12.2"
+  }
+}
