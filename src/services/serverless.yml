@@ -1,0 +1,46 @@
+service: soulprovidr-tv
+
+custom:
+  s3Bucket: soulprovidr.tv
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  versionFunctions: false
+  profile: soulprovidr
+  region: ca-central-1
+  stage: dev
+
+  plugins:
+    - serverless-webpack
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:*
+      Resource: "arn:aws:s3:::${self:custom.s3Bucket}/*"
+
+functions:
+  # getChannels:
+  #   handler: handler.getChannels
+  #   description: Retrieve the list of channels.
+
+  # saveChannel:
+  #   handler: handler.saveChannel
+  #   description: Create or update a channel.
+
+  saveVideo:
+    handler: handler.saveVideo
+    description: Saves the specified YouTube video to the S3 bucket.
+    environment:
+      S3_BUCKET: ${self:custom.s3Bucket}
+
+resources:
+  Resources:
+    S3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.s3Bucket}
+        AccessControl: PublicRead
+        WebsiteConfiguration:
+          IndexDocument: index.html
