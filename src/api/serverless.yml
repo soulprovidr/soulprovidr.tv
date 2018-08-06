@@ -1,4 +1,4 @@
-service: soulprovidr-tv
+service: api
 
 custom:
   s3Bucket: soulprovidr.tv
@@ -30,7 +30,7 @@ functions:
   #   description: Create or update a channel.
 
   saveVideo:
-    handler: handler.saveVideo
+    handler: index.saveVideo
     description: Saves the specified YouTube video to the S3 bucket.
     environment:
       S3_BUCKET: ${self:custom.s3Bucket}

@@ -29,6 +29,7 @@
     "@babel/preset-env": "^7.0.0-beta.49",
     "@babel/preset-react": "^7.0.0-beta.49",
     "autoprefixer": "^8.5.1",
+    "aws-sdk": "^2.286.2",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^8.2.3",
     "babel-loader": "^8.0.0-beta.3",
