@@ -1,4 +1,4 @@
-service: api
+service: soulprovidr-tv-api
 
 # Define variables.
 custom:
@@ -34,54 +34,9 @@ provider:
         - "arn:aws:dynamodb:${self:provider.region}:*:table/*"
 
 functions:
-  # getChannels:
-  #   handler: handler.getChannels
-  #   description: Retrieve the list of channels.
-
-  # saveChannel:
-  #   handler: handler.saveChannel
-  #   description: Create or update a channel.
-
-  saveVideo:
-    handler: index.saveVideo
-    description: Saves the specified YouTube video to the S3 bucket.
+  - ${file(./handlers/channels/functions.yml)}
+  - ${file(./handlers/videos/functions.yml)}
 
 resources:
-  Resources:
-    S3Bucket:
-      Type: AWS::S3::Bucket
-      Properties:
-        BucketName: ${self:custom.s3.bucket}
-        AccessControl: PublicRead
-        WebsiteConfiguration:
-          IndexDocument: index.html
-
-    VideosTable:
-      Type: AWS::DynamoDB::Table
-      # DeletionPolicy: Retain
-      Properties:
-        TableName: ${self:custom.dynamodb.videosTable}
-        AttributeDefinitions:
-          - AttributeName: id
-            AttributeType: S
-        KeySchema:
-          - AttributeName: id
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-
-    ChannelsTable:
-      Type: AWS::DynamoDB::Table
-      # DeletionPolicy: Retain
-      Properties:
-        TableName: ${self:custom.dynamodb.channelsTable}
-        AttributeDefinitions:
-          - AttributeName: slug
-            AttributeType: S
-        KeySchema:
-          - AttributeName: slug
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReactCapacityUnits: 1
-          WriteCapacityUnits: 1
+  - ${file(./resources/dynamodb.yml)}
+  - ${file(./resources/s3.yml)}

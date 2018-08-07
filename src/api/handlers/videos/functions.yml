@@ -1,0 +1,2 @@
+videos-save:
+  handler: videos.save

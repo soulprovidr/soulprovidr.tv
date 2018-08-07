@@ -1,1 +1,0 @@
-module.exports.saveVideo = require('./handlers/saveVideo');

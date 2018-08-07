@@ -1,0 +1,30 @@
+Resources:
+  ChannelsTable:
+    Type: AWS::DynamoDB::Table
+    # DeletionPolicy: Retain
+    Properties:
+      TableName: ${self:custom.dynamodb.channelsTable}
+      AttributeDefinitions:
+        - AttributeName: slug
+          AttributeType: S
+      KeySchema:
+        - AttributeName: slug
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+
+  VideosTable:
+    Type: AWS::DynamoDB::Table
+    # DeletionPolicy: Retain
+    Properties:
+      TableName: ${self:custom.dynamodb.videosTable}
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
