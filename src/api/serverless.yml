@@ -1,7 +1,12 @@
 service: api
 
+# Define variables.
 custom:
-  s3Bucket: soulprovidr.tv
+  dynamodb:
+    channelsTable: channels
+    videosTable: videos
+  s3:
+    bucket: soulprovidr.tv
 
 provider:
   name: aws
@@ -10,15 +15,23 @@ provider:
   profile: soulprovidr
   region: ca-central-1
   stage: dev
+  environment:
+    CHANNELS_TABLE: ${self:custom.dynamodb.channelsTable}
+    S3_BUCKET: ${self:custom.s3.bucket}
+    VIDEOS_TABLE: ${self:custom.dynamodb.videosTable}
 
-  plugins:
-    - serverless-webpack
-
+  # Allow Lambda all permissions for S3 bucket and DB tables.
   iamRoleStatements:
     - Effect: Allow
       Action:
         - s3:*
-      Resource: "arn:aws:s3:::${self:custom.s3Bucket}/*"
+      Resource: "arn:aws:s3:::${self:custom.s3.bucket}/*"
+
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource:
+        - "arn:aws:dynamodb:${self:provider.region}:*:table/*"
 
 functions:
   # getChannels:
@@ -32,15 +45,43 @@ functions:
   saveVideo:
     handler: index.saveVideo
     description: Saves the specified YouTube video to the S3 bucket.
-    environment:
-      S3_BUCKET: ${self:custom.s3Bucket}
 
 resources:
   Resources:
     S3Bucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: ${self:custom.s3Bucket}
+        BucketName: ${self:custom.s3.bucket}
         AccessControl: PublicRead
         WebsiteConfiguration:
           IndexDocument: index.html
+
+    VideosTable:
+      Type: AWS::DynamoDB::Table
+      # DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:custom.dynamodb.videosTable}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+    ChannelsTable:
+      Type: AWS::DynamoDB::Table
+      # DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:custom.dynamodb.channelsTable}
+        AttributeDefinitions:
+          - AttributeName: slug
+            AttributeType: S
+        KeySchema:
+          - AttributeName: slug
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReactCapacityUnits: 1
+          WriteCapacityUnits: 1

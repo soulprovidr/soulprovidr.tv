@@ -29,15 +29,38 @@ function getVideo(videoId) {
 */
 module.exports = async (event, context, callback) => {
 
-  const Bucket = process.env.S3_BUCKET;
+  const DB = new AWS.DynamoDB.DocumentClient({
+    convertEmptyValues: true
+  });
   const S3 = new AWS.S3();
 
+  const Bucket = process.env.S3_BUCKET;
+  const channelsTable = process.env.CHANNELS_TABLE;
+  const videosTable = process.env.VIDEOS_TABLE;
+
   try {
+    const channelSlug = event.channelSlug;
     const videoId = event.videoId;
+
+    // Download video.
+    const Body = await getVideo(videoId);
+
+    // Save video to S3.
     const ACL = 'public-read';
     const Key = `videos/${videoId}.mp4`;
-    const Body = await getVideo(videoId);
     await S3.upload({ ACL, Bucket, Key, Body }).promise();
+
+    // Create record in `videos` table.
+    const Item = { id: videoId, artist: '', title: '', location: Key };
+    await DB.put({ TableName: videosTable, Item }).promise();
+
+    // Add `videoId` to channel.
+    await DB.put({
+      TableName: channelsTable,
+      Key: { slug: channelSlug },
+      UpdateExpression: 'SET videos = list_append(videos, :videos)'
+    });
+
     return callback(null, 'Successfully saved ' + videoId + '.');
   } catch (e) {
     return callback(e);
