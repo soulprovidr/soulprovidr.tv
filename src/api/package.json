@@ -1,15 +1,18 @@
 {
-  "name": "ls",
+  "name": "soulprovidr-tv-api",
   "version": "1.0.0",
   "description": "AWS Lambda functions for soulprovidr.tv",
-  "main": "handler.js",
   "author": "Shola Anozie",
   "license": "MIT",
   "private": true,
   "devDependencies": {
-    "aws-sdk": "^2.286.2"
+    "aws-sdk": "^2.286.2",
+    "serverless-domain-manager": "^2.6.0",
+    "serverless-pseudo-parameters": "^2.1.0",
+    "serverless-secrets-plugin": "^0.1.0"
   },
   "dependencies": {
-    "ytdl-core": "^0.24.0"
+    "ytdl-core": "^0.24.0",
+    "ytpl": "^0.1.12"
   }
 }

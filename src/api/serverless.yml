@@ -1,12 +1,27 @@
 service: soulprovidr-tv-api
 
-# Define variables.
+plugins:
+  - serverless-domain-manager
+  - serverless-pseudo-parameters
+  - serverless-secrets-plugin
+
 custom:
-  dynamodb:
-    channelsTable: channels
-    videosTable: videos
-  s3:
-    bucket: soulprovidr.tv
+  customDomain:
+    basePath: ''
+    certificateArn: ${self:custom.secrets.certificateArn}
+    createRoute53Record: true
+    domainName: api.soulprovidr.tv
+    stage: ${self:provider.stage}
+  channels:
+    tableName: channels
+  secrets: ${file(secrets.${self:provider.stage}.yml)}
+  storage:
+    bucketName: soulprovidr.tv
+  videos:
+    queueName: ${self:service}-videos-queue
+    queueUrl:
+      Ref: SQSQueue
+    tableName: videos
 
 provider:
   name: aws
@@ -16,27 +31,62 @@ provider:
   region: ca-central-1
   stage: dev
   environment:
-    CHANNELS_TABLE: ${self:custom.dynamodb.channelsTable}
-    S3_BUCKET: ${self:custom.s3.bucket}
-    VIDEOS_TABLE: ${self:custom.dynamodb.videosTable}
+    CHANNELS_TABLE: ${self:custom.channels.tableName}
+    S3_BUCKET_NAME: ${self:custom.storage.bucketName}
+    VIDEOS_QUEUE_URL: ${self:custom.videos.queueUrl}
+    VIDEOS_TABLE: ${self:custom.videos.tableName}
 
-  # Allow Lambda all permissions for S3 bucket and DB tables.
   iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - s3:*
-      Resource: "arn:aws:s3:::${self:custom.s3.bucket}/*"
-
     - Effect: Allow
       Action:
         - dynamodb:*
       Resource:
-        - "arn:aws:dynamodb:${self:provider.region}:*:table/*"
+        - arn:aws:dynamodb:${self:provider.region}:#{AWS::AccountId}:table/${self:custom.channels.tableName}
+        - arn:aws:dynamodb:${self:provider.region}:#{AWS::AccountId}:table/${self:custom.videos.tableName}
+
+    - Effect: Allow
+      Action:
+        - s3:*
+      Resource: arn:aws:s3:::${self:custom.storage.bucketName}/*
+
+    - Effect: Allow
+      Action:
+        - sqs:*
+      Resource: arn:aws:sqs:${self:provider.region}:#{AWS::AccountId}:${self:custom.videos.queueName}
 
 functions:
-  - ${file(./handlers/channels/functions.yml)}
-  - ${file(./handlers/videos/functions.yml)}
+  channels-list:
+    handler: channels.list
+    events:
+      - http:
+          path: channels
+          method: get
+          cors:
+            origin: '*'
+            maxAge: 86400
+
+  channels-save:
+    handler: channels.save
+    timeout: 60
+
+  videos-list:
+    handler: videos.list
+    events:
+      - http:
+          path: videos
+          method: get
+          cors:
+            origin: '*'
+            maxAge: 86400
+
+  videos-save:
+    handler: videos.save
+    reservedConcurrency: 10
+    timeout: 60
+    events:
+      - sqs:
+          arn: arn:aws:sqs:${self:provider.region}:#{AWS::AccountId}:${self:custom.videos.queueName}
+          batchSize: 1
 
 resources:
-  - ${file(./resources/dynamodb.yml)}
-  - ${file(./resources/s3.yml)}
+  - ${file(./resources.yml)}

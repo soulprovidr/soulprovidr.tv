@@ -6,10 +6,25 @@ const DB = new AWS.DynamoDB.DocumentClient({
   convertEmptyValues: true
 });
 const S3 = new AWS.S3();
+const SQS = new AWS.SQS();
 
-const Bucket = process.env.S3_BUCKET;
+const Bucket = process.env.S3_BUCKET_NAME;
 const channelsTable = process.env.CHANNELS_TABLE;
+const QueueUrl = process.env.VIDEOS_QUEUE_URL;
 const videosTable = process.env.VIDEOS_TABLE;
+
+/**
+ * Remove the SQS event from the queue.
+ *
+ * @param {*} ReceiptHandle
+ * @returns
+ */
+function deleteMessage(ReceiptHandle) {
+  return SQS.deleteMessage({
+    QueueUrl,
+    ReceiptHandle
+  }).promise();
+}
 
 /**
  * Get the video's S3 key.
@@ -43,6 +58,7 @@ function getVideo(videoId) {
         Key: getKey(videoId),
         Body: fs.readFileSync(tmp)
       }).promise();
+      fs.unlinkSync(tmp);
       return resolve();
     });
     // Reject on error.
@@ -56,15 +72,10 @@ function getVideo(videoId) {
  * @param {*} videoId
  * @returns
  */
-function save(videoId) {
+function putItem(Item) {
   return DB.put({
     TableName: videosTable,
-    Item: {
-      id: videoId,
-      artist: '',
-      title: '',
-      location: getKey()
-    }
+    Item
   }).promise();
 }
 
@@ -75,7 +86,7 @@ function save(videoId) {
  * @param {*} slug
  * @returns
  */
-function saveToChannel(videoId, channelSlug) {
+function updateChannel(channelSlug, videoId) {
   return DB.update({
     TableName: channelsTable,
     Key: { slug: channelSlug },
@@ -90,28 +101,53 @@ function saveToChannel(videoId, channelSlug) {
 }
 
 /**
+* List videos in database.
+*
+* @param {*} event
+* @param {*} context
+* @param {*} callback
+*/
+module.exports.list = async (event, context, callback) => {
+  try {
+    const result = await DB.scan({
+      TableName: videosTable
+    }).promise();
+    const response = {
+      statusCode: 200,
+      body: JSON.stringify(result.Items)
+    };
+    return callback(null, response);
+  } catch (e) {
+    return callback(e);
+  }
+};
+
+/**
 * Saves a specified YouTube video to an S3 bucket.
 *
 * @param {*} event
 * @param {*} context
 * @param {*} callback
 */
-module.exports = async (event, context, callback) => {
+module.exports.save = async (event, context, callback) => {
+  const Message = event.Records[0];
   try {
-    const channelSlug = event.channelSlug;
-    const videoId = event.videoId;
+    const { channelSlug, video } = JSON.parse(Message.body);
+    await getVideo(video.id);
+    const Item = {
+      id: video.id,
+      artist: '',
+      title: video.title,
+      thumbnail: video.thumbnail,
+      location: getKey(video.id)
+    };
+    await putItem(Item);
+    await updateChannel(channelSlug, video.id);
+    await deleteMessage(Message.receiptHandle);
 
-    // Download the video.
-    await getVideo(videoId);
-
-    // Create record in `videos` table.
-    await save(videoId);
-
-    // Add `videoId` to channel.
-    await saveToChannel(videoId, channelSlug);
-
-    return callback(null, `Successfully saved ${videoId} to ${channelSlug}.`);
+    return callback(null, `Successfully saved ${video.id} to ${channelSlug}.`);
   } catch (e) {
+    await deleteMessage(Message.receiptHandle);
     return callback(e);
   }
 };

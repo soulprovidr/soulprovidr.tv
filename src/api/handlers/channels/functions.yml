@@ -1,4 +1,0 @@
-channels-list:
-  handler: channels.list
-channels-save:
-  handler: channels.save

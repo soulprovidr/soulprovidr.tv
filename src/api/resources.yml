@@ -3,7 +3,7 @@ Resources:
     Type: AWS::DynamoDB::Table
     # DeletionPolicy: Retain
     Properties:
-      TableName: ${self:custom.dynamodb.channelsTable}
+      TableName: ${self:custom.channels.tableName}
       AttributeDefinitions:
         - AttributeName: slug
           AttributeType: S
@@ -14,11 +14,24 @@ Resources:
         ReadCapacityUnits: 1
         WriteCapacityUnits: 1
 
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: ${self:custom.storage.bucketName}
+      AccessControl: PublicRead
+      WebsiteConfiguration:
+        IndexDocument: index.html
+
+  SQSQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: ${self:custom.videos.queueName}
+
   VideosTable:
     Type: AWS::DynamoDB::Table
     # DeletionPolicy: Retain
     Properties:
-      TableName: ${self:custom.dynamodb.videosTable}
+      TableName: ${self:custom.videos.tableName}
       AttributeDefinitions:
         - AttributeName: id
           AttributeType: S
