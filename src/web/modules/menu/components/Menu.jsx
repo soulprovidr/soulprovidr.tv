@@ -34,16 +34,11 @@ class Menu extends Component {
   }
 
   render() {
-    const { isOpen, onSelect, selectedChannel } = this.props;
+    const { onSelect, selectedChannel } = this.props;
     const { channels, isLoading } = this.state;
     const _channels = [].concat(channels, channels, channels);
     return (
-      <div className={
-        classnames({
-          menu: true,
-          'is-open': isOpen
-        })
-      }>
+      <div className="menu">
         {isLoading && <p className="text-white m-0 d-inline-block mx-auto">
           {isLoading ? 'Loading channels...' : ''}
         </p>}

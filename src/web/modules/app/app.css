@@ -42,20 +42,3 @@ i.icon {
 main {
   overflow: hidden;
 }
-
-.channel {
-  width: 100vw;
-  height: 100vh;
-  background-image: url(/img/static.gif);
-  background-size: cover;
-  background-position: center;
-  transition: transform 1.5s cubic-bezier(.19,1,.22,1);
-  /* transform: translateX(50%); */
-  transform: translateY(50%);
-  will-change: transform;
-}
-
-.channel.is-open {
-  /* transform: translateX(0); */
-  transform: translateY(0);
-}

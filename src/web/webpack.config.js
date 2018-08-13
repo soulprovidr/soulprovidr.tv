@@ -46,17 +46,14 @@ module.exports = ({ NODE_ENV }, { mode }) => {
   const plugins = [
     new webpack.DefinePlugin({
       __ENV__: JSON.stringify(NODE_ENV),
-      __VERSION__: JSON.stringify(require('./package.json').version),
-      __CHANNELS__: require('./channels.json')
+      __VERSION__: JSON.stringify(require('./package.json').version)
     }),
-    new CleanWebpackPlugin(['public/*'], {
-      exclude: ['channels.json']
-    }),
+    new CleanWebpackPlugin(['public/*']),
     new CopyWebpackPlugin([{
-      from: 'src/app/assets'
+      from: './assets'
     }]),
     new HtmlWebpackPlugin({
-      template: 'src/app/index.html'
+      template: './index.html'
     })
   ];
 
@@ -82,7 +79,7 @@ module.exports = ({ NODE_ENV }, { mode }) => {
   }
 
   const config = {
-    entry: './src/app/app.js',
+    entry: './main.js',
     output: {
       path: path.resolve(__dirname, 'public'),
       publicPath: '/',
@@ -95,6 +92,12 @@ module.exports = ({ NODE_ENV }, { mode }) => {
     },
     module: {
       rules
+    },
+    resolve: {
+      alias: {
+        '~': path.resolve(__dirname, './'),
+        '@': path.resolve(__dirname, './modules')
+      }
     },
     plugins
   };
