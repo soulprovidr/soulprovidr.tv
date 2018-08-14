@@ -57,33 +57,9 @@ function putItem(Item) {
 /*******************************************************************/
 
 /**
-* List channels in the database.
-*
-* @param {*} event
-* @param {*} context
-* @param {*} callback
-*/
-module.exports.list = async (event, context, callback) => {
-  try {
-    const result = await DB.scan({ TableName }).promise();
-    const response = {
-      statusCode: 200,
-      body: JSON.stringify(result.Items)
-    };
-    return callback(null, response);
-  } catch (e) {
-    return callback(e);
-  }
-};
-
-/**
 * Saves a channel to the database.
-*
-* @param {*} event
-* @param {*} context
-* @param {*} callback
 */
-module.exports.save = async (event, context, callback) => {
+module.exports = async (event, context, callback) => {
   for (let i = 0; i < event.channels.length; i++) {
     const Item = Object.assign({}, event.channels[i], { videos: [] });
     try {

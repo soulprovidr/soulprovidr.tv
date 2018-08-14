@@ -1,5 +1,15 @@
+channels-get:
+  handler: functions/channels.get
+  events:
+    - http:
+        path: channels/{slug}
+        method: get
+        cors:
+          origin: '*'
+          maxAge: 86400
+
 channels-list:
-    handler: handlers/channels.list
+    handler: functions/channels.list
     events:
       - http:
           path: channels
@@ -9,11 +19,11 @@ channels-list:
             maxAge: 86400
 
 channels-save:
-  handler: handlers/channels.save
+  handler: functions/channels.save
   timeout: 60
 
 videos-list:
-  handler: handlers/videos.list
+  handler: functions/videos.list
   events:
     - http:
         path: videos
@@ -23,7 +33,7 @@ videos-list:
           maxAge: 86400
 
 videos-save:
-  handler: handlers/videos.save
+  handler: functions/videos.save
   reservedConcurrency: 10
   timeout: 60
   events:

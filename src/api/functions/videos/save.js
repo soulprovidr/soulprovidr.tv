@@ -9,32 +9,7 @@ const S3 = new AWS.S3();
 const SQS = new AWS.SQS();
 
 const Bucket = process.env.S3_BUCKET_NAME;
-const channelsTable = process.env.CHANNELS_TABLE;
 const QueueUrl = process.env.VIDEOS_QUEUE_URL;
-const videosTable = process.env.VIDEOS_TABLE;
-
-/**
- * Remove the SQS event from the queue.
- *
- * @param {*} ReceiptHandle
- * @returns
- */
-function deleteMessage(ReceiptHandle) {
-  return SQS.deleteMessage({
-    QueueUrl,
-    ReceiptHandle
-  }).promise();
-}
-
-/**
- * Get the video's S3 key.
- *
- * @param {String} videoId
- * @returns
- */
-function getKey(videoId) {
-  return `videos/${videoId}.mp4`;
-}
 
 /**
  * Store video in S3 bucket.
@@ -44,6 +19,7 @@ function getKey(videoId) {
  */
 function downloadVideo(videoId) {
   return new Promise((resolve, reject) => {
+    const Key = `videos/${videoId}.mp4`;
     const tmp = `/tmp/${videoId}`;
     const download = ytdl(videoId, {
       filter: format => format.container === 'mp4'
@@ -55,28 +31,16 @@ function downloadVideo(videoId) {
       await S3.upload({
         Bucket,
         ACL: 'public-read',
-        Key: getKey(videoId),
+        Key,
         Body: fs.readFileSync(tmp)
       }).promise();
+      // Remove temporary file.
       fs.unlinkSync(tmp);
-      return resolve();
+      return resolve(Key);
     });
     // Reject on error.
     download.on('error', reject);
   });
-}
-
-/**
- * Add the video to the `videos` table.
- *
- * @param {*} videoId
- * @returns
- */
-function putItem(Item) {
-  return DB.put({
-    TableName: videosTable,
-    Item
-  }).promise();
 }
 
 /**
@@ -88,7 +52,7 @@ function putItem(Item) {
  */
 function updateChannel(channelSlug, videoId) {
   return DB.update({
-    TableName: channelsTable,
+    TableName: process.env.CHANNELS_TABLE,
     Key: { slug: channelSlug },
     UpdateExpression: 'SET videos = list_append(videos, :videos)',
     ConditionExpression: 'not(contains(videos, :videoId))',
@@ -103,64 +67,26 @@ function updateChannel(channelSlug, videoId) {
 /*******************************************************************/
 
 /**
-* Query videos in DB.
-*
-* @param {*} event
-* @param {*} context
-* @param {*} callback
+* Saves a specified YouTube video to a channel.
 */
-module.exports.get = async (event, context, callback) => {
-
-};
-
-/**
-* List videos in database.
-*
-* @param {*} event
-* @param {*} context
-* @param {*} callback
-*/
-module.exports.list = async (event, context, callback) => {
+module.exports = async (event, context, callback) => {
+  const QueueItem = event.Records[0];
   try {
-    const result = await DB.scan({
-      TableName: videosTable
-    }).promise();
-    const response = {
-      statusCode: 200,
-      body: JSON.stringify(result.Items)
-    };
-    return callback(null, response);
-  } catch (e) {
-    return callback(e);
-  }
-};
-
-/**
-* Saves a specified YouTube video to an S3 bucket.
-*
-* @param {*} event
-* @param {*} context
-* @param {*} callback
-*/
-module.exports.save = async (event, context, callback) => {
-  const Message = event.Records[0];
-  try {
-    const { channelSlug, video } = JSON.parse(Message.body);
-    await downloadVideo(video.id);
+    const { channelSlug, video } = JSON.parse(QueueItem.body);
+    const location = await downloadVideo(video.id);
     const Item = {
       id: video.id,
       artist: '',
       title: video.title,
       thumbnail: video.thumbnail,
-      location: getKey(video.id)
+      location
     };
-    await putItem(Item);
+    await DB.put({ TableName: process.env.VIDEOS_TABLE, Item }).promise();
     await updateChannel(channelSlug, video.id);
-    await deleteMessage(Message.receiptHandle);
-
+    await SQS.deleteMessage({ QueueUrl, ReceiptHandle }).promise();
     return callback(null, `Successfully saved ${video.id} to ${channelSlug}.`);
   } catch (e) {
-    await deleteMessage(Message.receiptHandle);
+    await SQS.deleteMessage({ QueueUrl, ReceiptHandle }).promise();
     return callback(e);
   }
 };
