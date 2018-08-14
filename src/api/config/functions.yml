@@ -1,0 +1,32 @@
+channels-list:
+    handler: handlers/channels.list
+    events:
+      - http:
+          path: channels
+          method: get
+          cors:
+            origin: '*'
+            maxAge: 86400
+
+channels-save:
+  handler: handlers/channels.save
+  timeout: 60
+
+videos-list:
+  handler: handlers/videos.list
+  events:
+    - http:
+        path: videos
+        method: get
+        cors:
+          origin: '*'
+          maxAge: 86400
+
+videos-save:
+  handler: handlers/videos.save
+  reservedConcurrency: 10
+  timeout: 60
+  events:
+    - sqs:
+        arn: arn:aws:sqs:${self:provider.region}:#{AWS::AccountId}:${self:custom.videos.queueName}
+        batchSize: 1

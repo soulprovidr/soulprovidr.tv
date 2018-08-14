@@ -42,7 +42,7 @@ function getKey(videoId) {
  * @param {String} videoId
  * @returns
  */
-function getVideo(videoId) {
+function downloadVideo(videoId) {
   return new Promise((resolve, reject) => {
     const tmp = `/tmp/${videoId}`;
     const download = ytdl(videoId, {
@@ -100,6 +100,19 @@ function updateChannel(channelSlug, videoId) {
   }).promise();
 }
 
+/*******************************************************************/
+
+/**
+* Query videos in DB.
+*
+* @param {*} event
+* @param {*} context
+* @param {*} callback
+*/
+module.exports.get = async (event, context, callback) => {
+
+};
+
 /**
 * List videos in database.
 *
@@ -133,7 +146,7 @@ module.exports.save = async (event, context, callback) => {
   const Message = event.Records[0];
   try {
     const { channelSlug, video } = JSON.parse(Message.body);
-    await getVideo(video.id);
+    await downloadVideo(video.id);
     const Item = {
       id: video.id,
       artist: '',

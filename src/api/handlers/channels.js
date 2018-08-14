@@ -54,6 +54,8 @@ function putItem(Item) {
   }).promise();
 }
 
+/*******************************************************************/
+
 /**
 * List channels in the database.
 *
