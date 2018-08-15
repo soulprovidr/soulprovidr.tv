@@ -9,19 +9,3 @@
   /* transform: translateY(50%); */
   will-change: transform;
 }
-
-.player__logo {
-  position: fixed;
-  right: 25px;
-  bottom: 20px;
-  width: 75px;
-  height: 75px;
-  cursor: pointer;
-  transition: transform 1s cubic-bezier(0.075, 0.82, 0.165, 1);
-  will-change: transform;
-  z-index: 999;
-}
-
-.player__logo:hover {
-  transform: scale(1.1);
-}

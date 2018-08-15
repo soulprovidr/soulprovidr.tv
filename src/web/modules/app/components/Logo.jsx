@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const Logo = ({ onClick }) => {
   return (
     <img
-      className="player__logo"
+      className="logo"
       onClick={onClick}
       src="/img/soulprovidr-tv.png"
     />
@@ -12,7 +12,7 @@ const Logo = ({ onClick }) => {
 };
 
 Logo.propTypes = {
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func
 };
 
 export default Logo;

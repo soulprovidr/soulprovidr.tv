@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux'; 
-
-import Logo from './Logo';
 
 import '../player.css';
 
@@ -66,8 +63,6 @@ class Channel extends Component {
     return (
       <div className="player">
 
-        <Logo />
-
         {/* <video
           className="channel__video"
           key="video"
@@ -85,15 +80,7 @@ class Channel extends Component {
 }
 
 Channel.propTypes = {
-  channel: PropTypes.object,
-  isOpen: PropTypes.bool.isRequired,
-  onClickLogo: PropTypes.func.isRequired
+  channel: PropTypes.object
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return null;
-};
-
-export default connect(
-  mapDispatchToProps
-)(Channel);
+export default Channel;
