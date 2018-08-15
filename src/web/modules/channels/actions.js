@@ -2,11 +2,9 @@ import axios from 'axios';
 import { Urls } from '~/constants';
 
 export const ActionTypes = {
-  GET_CHANNELS_FAILURE: 'app/GET_CHANNELS_FAILURE',
-  GET_CHANNELS_REQUEST: 'app/GET_CHANNELS_REQUEST',
-  GET_CHANNELS_SUCCESS: 'app/GET_CHANNELS_SUCCESS',
-  PREVIEW_CHANNEL: 'app/PREVIEW_CHANNEL',
-  SELECT_CHANNEL: 'app/SELECT_CHANNEL'
+  GET_CHANNELS_FAILURE: 'channels/GET_CHANNELS_FAILURE',
+  GET_CHANNELS_REQUEST: 'channels/GET_CHANNELS_REQUEST',
+  GET_CHANNELS_SUCCESS: 'channels/GET_CHANNELS_SUCCESS'
 };
 
 /*******************************************************************/
@@ -42,23 +40,5 @@ export function getChannels() {
       dispatch(getChannelsFailure(e));
       throw e;
     }
-  };
-}
-
-/*******************************************************************/
-
-export function previewChannel(channel) {
-  return {
-    type: ActionTypes.PREVIEW_CHANNEL,
-    payload: channel
-  };
-}
-
-/*******************************************************************/
-
-export function selectChannel(channel) {
-  return {
-    type: ActionTypes.SELECT_CHANNEL,
-    payload: channel
   };
 }

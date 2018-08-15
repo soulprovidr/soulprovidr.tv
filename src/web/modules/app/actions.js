@@ -1,26 +1,41 @@
-import axios from 'axios';
-import { Urls } from '~/constants';
-import { Action } from 'rxjs/scheduler/Action';
+import { getChannels } from '@/channels/actions';
+import { getVideos } from '@/videos/actions';
 
 export const ActionTypes = {
-  GET_CHANNELS_FAILURE: 'app/GET_CHANNELS_FAILURE',
-  GET_CHANNELS_REQUEST: 'app/GET_CHANNELS_REQUEST',
-  GET_CHANNELS_SUCCESS: 'app/GET_CHANNELS_SUCCESS'
+  INITIALIZE: 'app/INITIALIZE',
+  PREVIEW_CHANNEL: 'app/PREVIEW_CHANNEL',
+  SELECT_CHANNEL: 'app/SELECT_CHANNEL'
 };
 
-function getChannelsRequest() {
-  return {
-    type: ActionTypes.GET_CHANNELS_REQUEST
+/**
+ * Fetch list of channels, then fetch videos for a random one.
+ *
+ * @export
+ * @returns
+ */
+export function initialize() {
+  return async (dispatch) => {
+    const channels = await dispatch(getChannels());
+    const r = Math.round(Math.random() * channels.length);
+    await dispatch(getVideos(channels[r].slug));
+    return { type: ActionTypes.INITIALIZE };
   };
 }
 
-function getChannelsSuccess(channels) {
+/*******************************************************************/
+
+export function previewChannel(slug) {
   return {
-    type: Action.GET_CHANNELS_SUCCESS
+    type: ActionTypes.PREVIEW_CHANNEL,
+    payload: slug
   };
 }
 
-export async function initialize() {
-  const videos = await axios.get(Urls.VIDEOS);
-  return videos;
+/*******************************************************************/
+
+export function selectChannel(slug) {
+  return {
+    type: ActionTypes.SELECT_CHANNEL,
+    payload: slug
+  };
 }

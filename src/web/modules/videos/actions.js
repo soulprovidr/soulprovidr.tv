@@ -29,6 +29,7 @@ function getVideosSuccess(channels) {
   };
 }
 
+
 export function getVideos(slug = null) {
   return async (dispatch) => {
     dispatch(getVideosRequest());
