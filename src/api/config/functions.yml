@@ -1,15 +1,5 @@
-channels-get:
-  handler: functions/channels.get
-  events:
-    - http:
-        path: channels/{slug}
-        method: get
-        cors:
-          origin: '*'
-          maxAge: 86400
-
 channels-list:
-    handler: functions/channels.list
+    handler: modules/channels.list
     events:
       - http:
           path: channels
@@ -19,11 +9,10 @@ channels-list:
             maxAge: 86400
 
 channels-save:
-  handler: functions/channels.save
-  timeout: 60
+  handler: modules/channels.save
 
 videos-list:
-  handler: functions/videos.list
+  handler: modules/videos.list
   events:
     - http:
         path: videos
@@ -33,10 +22,11 @@ videos-list:
           maxAge: 86400
 
 videos-save:
-  handler: functions/videos.save
+  handler: modules/videos.save
   reservedConcurrency: 10
-  timeout: 60
+  timeout: 30
   events:
+    # Save videos as they are pushed into the queue.
     - sqs:
         arn: arn:aws:sqs:${self:provider.region}:#{AWS::AccountId}:${self:custom.videos.queueName}
         batchSize: 1

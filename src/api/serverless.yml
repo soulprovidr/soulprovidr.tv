@@ -1,5 +1,3 @@
-service: soulprovidr-tv-api
-
 plugins:
   - serverless-domain-manager
   - serverless-pseudo-parameters
@@ -22,6 +20,8 @@ custom:
     queueUrl:
       Ref: SQSQueue
     tableName: videos
+
+service: soulprovidr-tv-api
 
 provider:
   name: aws
