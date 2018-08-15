@@ -42,7 +42,10 @@ module.exports = async (event, context, callback) => {
     }
     return callback(null, {
       statusCode: 200,
-      body: JSON.stringify(videos)
+      body: JSON.stringify(videos),
+      headers: {
+        "Access-Control-Allow-Origin" : "*"
+      }
     });
   } catch (e) {
     return callback(e);

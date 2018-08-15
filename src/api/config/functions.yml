@@ -4,9 +4,7 @@ channels-list:
       - http:
           path: channels
           method: get
-          cors:
-            origin: '*'
-            maxAge: 86400
+          cors: true
 
 channels-save:
   handler: modules/channels.save
@@ -17,9 +15,7 @@ videos-list:
     - http:
         path: videos
         method: get
-        cors:
-          origin: '*'
-          maxAge: 86400
+        cors: true
 
 videos-save:
   handler: modules/videos.save

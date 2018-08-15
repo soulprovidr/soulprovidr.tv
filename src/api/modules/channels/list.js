@@ -15,7 +15,10 @@ module.exports = async (event, context, callback) => {
     const result = await DB.scan({ TableName }).promise();
     const response = {
       statusCode: 200,
-      body: JSON.stringify(result.Items)
+      body: JSON.stringify(result.Items),
+      headers: {
+        "Access-Control-Allow-Origin" : "*"
+      }
     };
     return callback(null, response);
   } catch (e) {
