@@ -70,23 +70,24 @@ function updateChannel(channelSlug, videoId) {
 * Saves a specified YouTube video to a channel.
 */
 module.exports = async (event, context, callback) => {
-  const QueueItem = event.Records[0];
+  const { body, receiptHandle } = event.Records[0];
   try {
-    const { channelSlug, video } = JSON.parse(QueueItem.body);
+    const { channelSlug, video } = JSON.parse(body);
     const location = await downloadVideo(video.id);
+    const splitTitle = video.title.split(' - ');
     const Item = {
       id: video.id,
-      artist: '',
-      title: video.title,
+      artist: splitTitle.length > 1 ? splitTitle[0] : '',
+      title: splitTitle.length > 1 ? splitTitle[1] : video.title,
       thumbnail: video.thumbnail,
       location
     };
     await DB.put({ TableName: process.env.VIDEOS_TABLE, Item }).promise();
     await updateChannel(channelSlug, video.id);
-    await SQS.deleteMessage({ QueueUrl, ReceiptHandle }).promise();
+    await SQS.deleteMessage({ QueueUrl, ReceiptHandle: receiptHandle }).promise();
     return callback(null, `Successfully saved ${video.id} to ${channelSlug}.`);
   } catch (e) {
-    await SQS.deleteMessage({ QueueUrl, ReceiptHandle }).promise();
+    await SQS.deleteMessage({ QueueUrl, ReceiptHandle: receiptHandle }).promise();
     return callback(e);
   }
 };

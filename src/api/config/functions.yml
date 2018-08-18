@@ -27,3 +27,4 @@ videos-save:
     - sqs:
         arn: arn:aws:sqs:${self:provider.region}:#{AWS::AccountId}:${self:custom.videos.queueName}
         batchSize: 1
+        enabled: true
