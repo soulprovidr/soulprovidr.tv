@@ -9,3 +9,8 @@
   /* transform: translateY(50%); */
   will-change: transform;
 }
+
+.player__video {
+  min-width: 100%;
+  min-height: 100%;
+}

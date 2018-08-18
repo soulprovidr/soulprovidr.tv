@@ -1,6 +1,9 @@
-import { ActionTypes } from './actions';
+import { ActionTypes } from './constants';
 
-const initialState = [];
+const initialState = {
+  items: [],
+  selectedVideo: null
+};
 
 export default (state = initialState, action) => {
   const { payload, type } = action;
@@ -8,7 +11,12 @@ export default (state = initialState, action) => {
     case ActionTypes.GET_VIDEOS_SUCCESS:
       return {
         ...state,
-        items: [...state.items, payload]
+        items: payload.videos
+      };
+    case ActionTypes.SELECT_VIDEO:
+      return {
+        ...state,
+        selectedVideo: payload.video.id
       };
     default:
       return state;

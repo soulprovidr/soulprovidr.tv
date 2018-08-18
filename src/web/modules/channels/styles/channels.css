@@ -1,0 +1,34 @@
+.channels {
+  position: fixed;
+  width: 25%;
+  height: 100%;
+  top: 0; bottom: 0; right: 0;
+  z-index: 5;
+  background: white;
+  padding: 40px 40px 40px 80px;
+}
+
+.channels .logo {
+  margin: 0 auto 15px;
+  margin-bottom: 15px;
+}
+
+.channels li {
+  font-weight: normal;
+  padding: 10px;
+  border-bottom: 1px dotted #ddd;
+  cursor: pointer;
+  text-align: left;
+}
+
+.channels li:hover {
+  font-weight: bold;
+}
+
+.channels li:active {
+  font-weight: bold;
+}
+
+.channels li.selected {
+  font-weight: bold;
+}

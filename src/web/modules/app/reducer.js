@@ -1,11 +1,11 @@
-import { ActionTypes } from './actions';
+import { ActionTypes } from './constants';
 
 const initialState = {
   initialized: false
 };
 
 export default (state = initialState, action) => {
-  const { payload, type } = action;
+  const { type } = action;
   switch (type) {
     case ActionTypes.INITIALIZE:
       return {

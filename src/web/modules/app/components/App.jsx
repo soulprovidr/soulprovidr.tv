@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { initialize } from '../actions';
+import initialize from '../actions/initialize';
 
-import Logo from './Logo';
-import Player from '@/player';
+import Channels from '@/channels';
+import Logo from '@/common/components/Logo';
+import Player from '@/videos/components/Player';
 
-import '../app.css';
+import '../styles/app.css';
 
 class App extends Component {
   componentDidMount() {
@@ -17,6 +18,7 @@ class App extends Component {
   render() {
     return (
       <main>
+        <Channels />
         <Player />
         <Logo />
       </main>
@@ -28,6 +30,11 @@ App.propTypes = {
   initialize: PropTypes.func.isRequired
 };
 
-export default connect(null, {
+const mapDispatchToProps = {
   initialize
-})(App);
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(App);

@@ -20,7 +20,8 @@ html, body {
   height: 100vh;
   font-family: Roboto Mono;
   letter-spacing: .5px;
-  font-size: 11pt;
+  font-size: 14pt;
+  overflow: hidden;
 }
 
 .bg-darker {
@@ -44,9 +45,9 @@ main {
 }
 
 .logo {
-  position: fixed;
+  /* position: fixed;
   right: 25px;
-  bottom: 20px;
+  bottom: 20px; */
   width: 75px;
   height: 75px;
   cursor: pointer;

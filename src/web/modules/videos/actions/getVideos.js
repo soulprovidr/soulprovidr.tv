@@ -1,13 +1,9 @@
 import axios from 'axios';
+import { batchActions } from 'redux-batch-enhancer';
+import { ActionTypes } from '../constants';
 import { Urls } from '~/constants';
 
-export const ActionTypes = {
-  GET_VIDEOS_FAILURE: 'app/GET_VIDEOS_FAILURE',
-  GET_VIDEOS_REQUEST: 'app/GET_VIDEOS_REQUEST',
-  GET_VIDEOS_SUCCESS: 'app/GET_VIDEOS_SUCCESS'
-};
-
-/*******************************************************************/
+import selectVideo from './selectVideo';
 
 function getVideosFailure(e) {
   return {
@@ -22,26 +18,30 @@ function getVideosRequest() {
   };
 }
 
-function getVideosSuccess(channels) {
+function getVideosSuccess(videos) {
   return {
     type: ActionTypes.GET_VIDEOS_SUCCESS,
-    payload: channels
+    payload: { videos }
   };
 }
 
-
-export function getVideos(slug = null) {
+export default (slug = null) => {
   return async (dispatch) => {
     dispatch(getVideosRequest());
     try {
-      const { data } = await axios.get(Urls.VIDEOS, {
+      const { data: videos } = await axios.get(Urls.VIDEOS, {
         params: { channel: slug }
       });
-      dispatch(getVideosSuccess(data));
-      return data;
+      dispatch(
+        batchActions([
+          getVideosSuccess(videos),
+          selectVideo(videos[0])
+        ])
+      );
+      return videos;
     } catch (e) {
       dispatch(getVideosFailure(e));
       throw e;
     }
   };
-}
+};

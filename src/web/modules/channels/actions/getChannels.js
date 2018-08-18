@@ -1,13 +1,7 @@
 import axios from 'axios';
 import { Urls } from '~/constants';
 
-export const ActionTypes = {
-  GET_CHANNELS_FAILURE: 'channels/GET_CHANNELS_FAILURE',
-  GET_CHANNELS_REQUEST: 'channels/GET_CHANNELS_REQUEST',
-  GET_CHANNELS_SUCCESS: 'channels/GET_CHANNELS_SUCCESS'
-};
-
-/*******************************************************************/
+import { ActionTypes } from '../constants';
 
 function getChannelsFailure(e) {
   return {
@@ -25,11 +19,11 @@ function getChannelsRequest() {
 function getChannelsSuccess(channels) {
   return {
     type: ActionTypes.GET_CHANNELS_SUCCESS,
-    payload: channels
+    payload: { channels }
   };
 }
 
-export function getChannels() {
+export default () => {
   return async (dispatch) => {
     dispatch(getChannelsRequest());
     try {
@@ -41,4 +35,4 @@ export function getChannels() {
       throw e;
     }
   };
-}
+};
