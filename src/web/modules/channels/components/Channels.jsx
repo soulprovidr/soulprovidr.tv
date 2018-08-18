@@ -16,6 +16,7 @@ class Channels extends Component {
   static propTypes = {
     channels: PropTypes.array.isRequired,
     isFetching: PropTypes.bool.isRequired,
+    isHidden: PropTypes.bool.isRequired,
     selectChannel: PropTypes.func.isRequired,
     selectedChannel: PropTypes.object,
   };
@@ -24,34 +25,42 @@ class Channels extends Component {
     selectedChannel: null
   };
 
+  getContainerClassName = () => {
+    const { isHidden } = this.props;
+    return isHidden ? 'channels hidden' : 'channels';
+  };
+
   getItemClassName = (channel) => {
     const { selectedChannel } = this.props;
     if (selectedChannel && channel.slug == selectedChannel.slug) {
       return 'selected';
     }
     return '';
-  }
+  };
 
-  sort = (a, b) => a.slug.localeCompare(b.slug);
+  sortItems = (a, b) => a.slug.localeCompare(b.slug);
 
   render() {
     const {
       channels,
       selectChannel
     } = this.props;
+    const className = this.getContainerClassName();
     return (
-      <ol className="channels">
-        <Logo />
-        <h5>Channel Guide</h5>
+      <ol className={className}>
+        <li>
+          <Logo />
+        </li>
         {channels
-          .sort(this.sort)
-          .map(c => (
+          .sort(this.sortItems)
+          .map((c, i) => (
             <li
               key={c.slug}
               onClick={() => selectChannel(c)}
               className={this.getItemClassName(c)}
             >
-              {c.name}
+              <h5>{i+1}. {c.name}</h5>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu sem venenatis, ultricies felis at, suscipit purus. Quisque id odio arcu. Praesent eget metus a dolor tempor vulputate.</p>
             </li>
           ))
         }

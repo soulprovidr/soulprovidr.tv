@@ -11,24 +11,49 @@ import Player from '@/videos/components/Player';
 import '../styles/app.css';
 
 class App extends Component {
-  componentDidMount() {
-    this.props.initialize();
+  static propTypes = {
+    initialize: PropTypes.func.isRequired
+  };
+
+  constructor() {
+    super();
+
+    this.state = {
+      isChannelsHidden: false
+    };
+
+    this.hideChannelsTimeout = null;
+  }
+
+  async componentDidMount() {
+    await this.props.initialize();
+    this.scheduleHideChannels();
+  }
+
+  scheduleHideChannels = (timeout = 2000) => {
+    clearTimeout(this.hideChannelsTimeout);
+    this.hideChannelsTimeout = setTimeout(() => this.setState({ isChannelsHidden: true }), timeout);
+  };
+
+  showChannels = () => {
+    const { isChannelsHidden } = this.state;
+    if (isChannelsHidden) {
+      this.setState({ isChannelsHidden: !isChannelsHidden });
+    }
+    this.scheduleHideChannels(1500);
   }
 
   render() {
+    const { isChannelsHidden } = this.state;
     return (
-      <main>
-        <Channels />
+      <main onMouseMove={this.showChannels}>
+        <Channels isHidden={isChannelsHidden} />
         <Player />
         <Logo />
       </main>
     );
   }
 }
-
-App.propTypes = {
-  initialize: PropTypes.func.isRequired
-};
 
 const mapDispatchToProps = {
   initialize

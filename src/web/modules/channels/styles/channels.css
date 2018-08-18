@@ -1,34 +1,69 @@
 .channels {
   position: fixed;
-  width: 25%;
-  height: 100%;
-  top: 0; bottom: 0; right: 0;
+  min-width: 100%;
+  height: 225px;
+  bottom: 0; right: 0; left: 0;
   z-index: 5;
-  background: white;
-  padding: 40px 40px 40px 80px;
+  background: rgba(0,0,0,0.8);
+  color: white;
+  list-style: none;
+  overflow-x: auto;
+  display: flex;
+  margin: 0;
+  padding-top: 15px;
+  transition: transform 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.channels.hidden {
+  transform: translateY(225px);
 }
 
 .channels .logo {
-  margin: 0 auto 15px;
-  margin-bottom: 15px;
+  width: 100px;
+  height: 100px;
 }
 
 .channels li {
   font-weight: normal;
-  padding: 10px;
-  border-bottom: 1px dotted #ddd;
+  padding: 25px;
+  border-right: 1px dotted #555555;
   cursor: pointer;
   text-align: left;
+  width: 25%;
+  flex-shrink: 0;
+  opacity: 0.7;
+  transition: opacity 250ms cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
 .channels li:hover {
-  font-weight: bold;
+  opacity: 1;
 }
 
-.channels li:active {
-  font-weight: bold;
+.channels li:first-of-type {
+  width: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.channels li:last-of-type {
+  border: none;
 }
 
 .channels li.selected {
+  opacity: 1;
+}
+
+.channels li h5 {
   font-weight: bold;
+}
+
+.channels li p {
+  margin: 0;
+  font-size: 12pt;
+}
+
+.channels::-webkit-scrollbar {
+  width: 0px;  /* remove scrollbar space */
+  background: transparent;  /* optional: just make scrollbar invisible */
 }

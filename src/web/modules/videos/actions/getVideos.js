@@ -2,6 +2,7 @@ import axios from 'axios';
 import { batchActions } from 'redux-batch-enhancer';
 import { ActionTypes } from '../constants';
 import { Urls } from '~/constants';
+import shuffle from '~/helpers/shuffle';
 
 import selectVideo from './selectVideo';
 
@@ -29,9 +30,10 @@ export default (slug = null) => {
   return async (dispatch) => {
     dispatch(getVideosRequest());
     try {
-      const { data: videos } = await axios.get(Urls.VIDEOS, {
+      let { data: videos } = await axios.get(Urls.VIDEOS, {
         params: { channel: slug }
       });
+      videos = shuffle(videos);
       dispatch(
         batchActions([
           getVideosSuccess(videos),
